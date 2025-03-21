@@ -1,0 +1,238 @@
+# Function to convert AED to INR
+def convert_aed_to_inr(aed_amount, exchange_rate):
+    return aed_amount * exchange_rate
+
+# Input from the user
+aed_amount = float(input("Enter the amount in AED: "))
+exchange_rate = 21  # Example rate, this should be updated with real-time data
+
+# Calling the function and printing the result
+inr_amount = convert_aed_to_inr(aed_amount, exchange_rate)
+print(f"{aed_amount} AED {inr_amount} INR.")
+
+# Function to multiply a number by 15% and subtract from the multiplied number
+def multiply_and_subtract(SW):
+    # Multiply the number by 15%
+    fifteen_percent = SW * 0.15
+    
+    # Subtract the 15% value from the original number
+    ReturnSW = SW - fifteen_percent
+    return ReturnSW 
+
+SW = inr_amount
+
+# Calling the function and printing the result
+result1 = multiply_and_subtract(SW)
+print(f"The result of multiplying {SW} by 15% and subtracting from {SW} is {result1}.")
+
+# Function to multiply a number by 5% and subtract from result1
+def multiply_and_subtract(number1):
+    # Multiply the number by 5%
+    five_percent = number1 * 0.05
+    
+    # Subtract the 5% value from result1
+    result2 = result1 - five_percent 
+    return result2
+
+number1 = inr_amount
+
+# Calling the function and printing the result
+result3 = multiply_and_subtract(SW)
+print(f"The result of multiplying {number1} by 5% and subtracting from {SW} is {result3}.")
+
+# Function to multiply a number by 5% and subtract from result3
+def multiply_and_subtract(number1):
+    # Multiply the number by 5%
+    five_percent = number1 * 0.05
+    
+    # Subtract the 5% value from the original number
+    result4 = result3 - five_percent 
+    return result4
+
+number1 = inr_amount
+
+# Calling the function and printing the result
+result4 = multiply_and_subtract(SW)
+print(f"The result of multiplying {number1} by 5% and subtracting from {SW} is {result4}.")
+
+
+# Function to multiply a number by 13% and subtract from result4
+def multiply_and_subtract(sw):
+    # Multiply the number by 13%
+    fifteen_percent = sw * 0.13
+    
+    # Subtract the 13% value from result4
+    result5 = result4 - fifteen_percent
+    return result5
+
+SW = inr_amount
+
+# Calling the function and printing the result
+result5 = multiply_and_subtract(SW)
+print(f"The result of multiplying {SW} by 13% and subtracting from {SW} is {result5}.")
+
+# Function to check 10 different conditions
+def check_conditions(value):
+    if value < 4:
+        return "237"
+    else:
+        return "0"
+    # Input from user
+value = int(input("Enter weight: "))
+
+# Calling the function and printing the result
+result15 = check_conditions(value)
+print(result15)
+# Sample string representing a number
+string_value = result15
+
+# Convert the string to a float
+result16 = float(string_value)
+
+# Print the result
+print(result16)  # Output will be 12.34
+ # Subtract the Delivery charges(210) 
+
+def subtract(Delivery):
+    result6 = result5 - result16
+    return result6
+result6 = subtract(SW)
+print(f"subtracting from {SW} is {result6}.")
+# Function to check 10 different conditions
+def check_conditions(value):
+    if value == 1:
+        return "200"
+    elif value == 2:
+        return "500"
+    elif value == 3:
+        return "800"
+    elif value == 4:
+        return "1100"
+    elif value == 5:
+        return "1360"
+    elif value == 6:
+        return "1480"
+    elif value == 7:
+        return "1610"
+    elif value == 8:
+        return "1740"
+    elif value == 9:
+        return "1860"
+    elif value == 10:
+        return "3250"
+    elif value == 12:
+        return "3630"
+    elif value == 13:
+        return "3820"
+    elif value == 14:
+        return "4000"
+    elif value == 15:
+        return "4190"
+    elif value == 16:
+        return "4380"
+    elif value == 17:
+        return "4560"
+    elif value == 18:
+        return "4750"
+    elif value == 19:
+        return "4940"
+    elif value == 11:
+        return "3440"
+    elif value == 20:
+        return "5130"
+    elif value == 0:
+        return "150"
+    elif value == 15:
+        return "350"
+    elif value == 25:
+        return "650"
+    elif value == 35:
+        return "950"
+    elif value == 45:
+        return "1290"
+    elif value == 55:
+        return "1420"
+    elif value == 65:
+        return "1550"
+    elif value == 75:
+        return "1670"
+    elif value == 85:
+        return "1800"
+    elif value == 95:
+        return "1930"
+    elif value == 105:
+        return "3350"
+    elif value == 115:
+        return "3540"
+    elif value == 125:
+        return "3720"
+    elif value == 135:
+        return "3910"
+    elif value == 145:
+        return "4100"
+    elif value == 155:
+        return "4280"
+    elif value == 165:
+        return "4470"
+    elif value == 175:
+        return "4660"
+    elif value == 185:
+        return "4840"
+    elif value == 195:
+        return "5030"
+    elif value == 21:
+        return "5300"
+    else:
+        return "No condition met"
+
+# Input from user
+value = int(input("Enter a value between 0 and 21: "))
+
+# Calling the function and printing the result
+result7 = check_conditions(value)
+print(result7)
+
+# Sample string representing a number
+string_value = result7
+
+# Convert the string to a float
+result8 = float(string_value)
+
+# Print the result
+print(result8)  # Output will be 12.34
+
+# Subtract the Weight charge 
+def subtract(weight):
+    result9 = result6 - result8
+    return result9
+result9 = subtract(SW)
+print(f"subtracting from {SW} is {result9}.")
+
+# Function to multiply a number by 5% and subtract from the multiplied number
+def multiply_and_subtract(result9):
+    # Multiply the number by 5%
+    result10 = result9 * 0.05
+    
+    # Subtract the 5% value from the original number
+    result11 = result9 - result10 
+    return result11
+
+number1 = inr_amount
+
+# Calling the function and printing the result
+result11 = multiply_and_subtract(result9)
+print(f"The result of multiplying {result9} by 5% and subtracting from {result9} is {result11}.")
+
+# Function to multiply a number by 10% and subtract from the multiplied number
+def multiply_and_subtract(result11):
+    # Multiply the number by 5%
+    result12 = result11 * 0.10
+    
+    # Subtract the 5% value from the original number
+    result13 = result11 - result12
+    return result13
+
+
+# Calling the function and printing the result
+result13 = multiply_and_subtract(result11)
+print(f"Purchase price {result13}.")
