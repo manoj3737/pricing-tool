@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reverse Pricing Tool</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .result {
+            font-size: 16px;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f4f4f4;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+
+        .upload-container {
+            margin-top: 20px;
+        }
+
+        input[type="file"] {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Reverse Pricing Tool</h1>
+
+        <!-- Manual input form -->
+        <label for="aedAmount">Enter the amount in AED:</label>
+        <input type="number" id="aedAmount" placeholder="Amount in AED" required>
+
+        <label for="weight">Enter weight:</label>
+        <input type="number" id="weight" placeholder="Weight" required>
+
+        <button onclick="manualCalculate()">Calculate Manually</button>
+
+        <div id="manualResult" class="result"></div>
+
+        <div id="errorMessage" class="error"></div>
+
+        <!-- Bulk import section -->
+        <div class="upload-container">
+            <label for="fileInput">Import Excel File (AED and Weight)</label>
+            <input type="file" id="fileInput" accept=".xlsx" onchange="importFile()">
+            <button onclick="exportFile()">Export to Excel</button>
+        </div>
+
+        <div id="importResult" class="result"></div>
+    </div>
+
+    <script>
+        // Helper functions for calculations
+        function calculate(aedAmount, weight) {
+            let exchangeRate = 21; // Static exchange rate
+            let inrAmount = convertAedToInr(aedAmount, exchangeRate);
+            let result1 = multiplyAndSubtract(inrAmount, 0.15);
+            let result2 = multiplyAndSubtract(result1, 0.0588);
+            let result3 = multiplyAndSubtract(result2, 0.0624);
+            let result4 = multiplyAndSubtract(result3, 0.1733);
+            let deliveryCharge = checkConditions(weight);
+            let result5 = subtract(result4, deliveryCharge);
+            let weightCharge = checkWeightConditions(weight);
+            let result6 = subtract(result5, weightCharge);
+            let result7 = multiplyAndSubtract(result6, 0.05);
+            let result8 = multiplyAndSubtract(result7, 0.10);
+
+            return {
+                AED: aedAmount,
+                Weight: weight,
+                INR: inrAmount,
+                "After 15% Deduction": result1,
+                "After 5% Deduction": result2,
+                "After another 5% Deduction": result3,
+                "After 13% Deduction": result4,
+                "Delivery Charge": deliveryCharge,
+                "Weight Charge": weightCharge,
+                "Final Amount": result8
+            };
+        }
+
+        function convertAedToInr(aedAmount, exchangeRate) {
+            return aedAmount * exchangeRate;
+        }
+
+        function multiplyAndSubtract(amount, percentage) {
+            let deduction = amount * percentage;
+            return amount - deduction;
+        }
+
+        function checkConditions(value) {
+            if (value < 4) return 237;
+            else return 0;
+        }
+
+        function checkWeightConditions(value) {
+            const conditions = {
+                1: 200, 2: 500, 3: 800, 4: 1100, 5: 1360, 6: 1480, 7: 1610, 8: 1740, 9: 1860, 
+                10: 3250, 11: 3440, 12: 3630, 13: 3820, 14: 4000, 15: 4190, 16: 4380, 17: 4560,
+                18: 4750, 19: 4940, 20: 5130,  1.5: 350, 2.5: 650, 3.5: 950, 4.5:1290, 5.5:1420,
+                6.5:1550, 7.5: 1670, 8.5: 1800, 9.5: 1930, 10.5: 3350, 11.5: 3540, 12.5: 3720,
+                13.5: 3910, 14.5: 4100, 15.5: 4280, 16.5: 4470, 17.5: 4660, 18.5: 4840, 19.5: 5030
+            };
+            return conditions[value] || 150;
+        }
+
+        function subtract(amount, deduction) {
+            return amount - deduction;
+        }
+
+        // Manual calculation function
+        function manualCalculate() {
+            // Clear previous results
+            document.getElementById('manualResult').innerHTML = '';
+            document.getElementById('errorMessage').innerHTML = '';
+
+            // Get manual inputs
+            let aedAmount = parseFloat(document.getElementById('aedAmount').value);
+            let weight = parseFloat(document.getElementById('weight').value);
+
+            // Check if AED amount or weight are valid numbers and greater than zero
+            if (isNaN(aedAmount) || aedAmount <= 0) {
+                document.getElementById('errorMessage').innerHTML = "Please enter a valid AED value greater than 0.";
+                return;
+            }
+
+            // Allow weight to be zero if it's a valid number
+            if (isNaN(weight)) {
+                document.getElementById('errorMessage').innerHTML = "Please enter a valid weight value.";
+                return;
+            }
+
+            // Perform calculation
+            let result = calculate(aedAmount, weight);
+
+            // Display results
+            document.getElementById('manualResult').innerHTML = `
+                <strong>AED:</strong> ${result.AED} AED<br>
+                <strong>Weight:</strong> ${result.Weight} kg<br>
+                <strong>INR Amount:</strong> ${result.INR.toFixed(2)} INR<br>
+                <strong>After 15% Deduction:</strong> ${result["After 15% Deduction"].toFixed(2)} INR<br>
+                <strong>After 5% Deduction:</strong> ${result["After 5% Deduction"].toFixed(2)} INR<br>
+                <strong>After another 5% Deduction:</strong> ${result["After another 5% Deduction"].toFixed(2)} INR<br>
+                <strong>After 13% Deduction:</strong> ${result["After 13% Deduction"].toFixed(2)} INR<br>
+                <strong>Delivery Charge:</strong> ${result["Delivery Charge"]} INR<br>
+                <strong>Weight Charge:</strong> ${result["Weight Charge"]} INR<br>
+                <strong>Final Amount:</strong> ${result["Final Amount"].toFixed(2)} INR
+            `;
+        }
+
+        // Import Excel File and process data
+        function importFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            if (!file) return alert("Please select a file.");
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = e.target.result;
+                const workbook = XLSX.read(data, {type: 'binary'});
+                const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                const rows = XLSX.utils.sheet_to_json(sheet, {header: 1});
+                
+                // Process up to 15 rows (AED and weight)
+                const results = [];
+                rows.slice(0, 50000).forEach((row) => {
+                    const aedAmount = row[0];
+                    const weight = row[1];
+                    if (!isNaN(aedAmount) && !isNaN(weight)) {
+                        results.push(calculate(aedAmount, weight));
+                    }
+                });
+
+                // Store results globally for export
+                window.exportData = results;
+
+                // Display import results
+                document.getElementById('importResult').innerHTML = "File processed successfully! You can now export the results.";
+            };
+
+            reader.readAsBinaryString(file);
+        }
+
+        // Export the results back to Excel
+        function exportFile() {
+            if (!window.exportData) {
+                alert('No data to export. Please import a file first.');
+                return;
+            }
+
+            const ws = XLSX.utils.json_to_sheet(window.exportData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Results");
+
+            const wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+            saveAs(new Blob([wbout], { type: "application/octet-stream" }), 'pricing_results.xlsx');
+        }
+    </script>
+
+</body>
+</html>
